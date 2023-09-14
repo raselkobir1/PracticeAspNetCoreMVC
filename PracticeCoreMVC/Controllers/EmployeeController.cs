@@ -82,5 +82,44 @@ namespace PracticeCoreMVC.Controllers
             }
             return View(employeeData);
         }
+
+        // Employee Details
+        public async Task<IActionResult> Details(int? employeeId)
+        {
+            if (employeeId == null)
+            {
+                return NotFound();
+            }
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.EmployeeId == employeeId);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        // GET: Employees/Delete/1
+        public async Task<IActionResult> Delete(int? employeeId)
+        {
+            if (employeeId == null)
+            {
+                return NotFound();
+            }
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.EmployeeId == employeeId);
+
+            return View(employee);
+        }
+
+        // POST: Employees/Delete/1
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int employeeId)
+        {
+            var employee = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == employeeId);
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
